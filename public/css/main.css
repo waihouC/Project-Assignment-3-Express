@@ -1,0 +1,45 @@
+body {
+    background-image:url(/img/seamless-waffle-background.jpg);
+    background-repeat: repeat;
+    padding-top: 110px;
+    padding-bottom: 60px;
+}
+
+#content {
+    padding: 0 4rem;
+}
+
+.divider {
+    transform: translateX(-50%);
+}
+
+/* for large screens */
+@media screen and (min-width: 990px) {
+    body {
+        padding-top: 82px;
+    }
+
+    .nav-link-row {
+        display: flex;
+    }
+
+    #content {
+        padding: 0 8rem;
+    }
+
+    .divider {
+        transform: translateX(-75%);
+     }
+}
+
+.brand-logo {
+    width: 120px;
+}
+
+.navbar-color {
+    background-color:#2b2223;
+}
+
+#intro {
+    background-color: white;
+}
