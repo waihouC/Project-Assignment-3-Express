@@ -1,0 +1,42 @@
+{{#extends 'base'}}
+
+{{#block 'content'}}
+
+<div class="row mb-4 position-relative">
+    <h1 class="display-4">Login</h1>
+    <div class="col-12 py-1 bg-dark position-absolute bottom-0 divider"></div>
+</div>
+
+<div class="row">
+    <div class="col-8 col-xl-4 d-flex flex-column mx-auto bg-white p-4">
+        <form method="POST">
+            {{{form}}}
+            <div class="d-grid col-4 mx-auto">
+                <input type="submit" value="Log in" class="btn btn-primary my-3"/>
+            </div>
+        </form>
+        <div class="d-flex justify-content-center my-3">
+            <div>
+                Don't have an account? <a href="/users/register">Create one</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{/block}}
+
+{{#block 'js'}}
+<script src="https://unpkg.com/bootstrap-show-password@1.2.1/dist/bootstrap-show-password.min.js"></script>
+
+<script>
+    $("input[type='password']").attr("data-toggle", "password");
+
+    $(document).ready(function() {
+        $(".invalid-feedback").clone().appendTo(".input-group");
+    });
+    
+</script>
+
+{{/block}}
+
+{{/extends}}

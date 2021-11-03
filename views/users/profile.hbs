@@ -1,0 +1,42 @@
+{{#extends 'base'}}
+
+{{#block 'content'}}
+
+<div class="row mb-4 position-relative">
+    <h1 class="display-4">User Profile</h1>
+    <div class="col-12 py-1 bg-dark position-absolute bottom-0 divider"></div>
+</div>
+
+<div class="row">
+    <div class="col-9 col-xl-6 mx-auto bg-white p-5">
+        <div class="mb-4 row">
+            <label for="firstname" class="col-3 col-form-label fw-bold">First name</label>
+            <div class="col-9">
+                <input type="text" class="form-control" id="firstname" value={{user.first_name}} disabled readonly>
+            </div>
+        </div>
+        <div class="mb-4 row">
+            <label for="lastname" class="col-3 col-form-label fw-bold">Last name</label>
+            <div class="col-9">
+                <input type="text" class="form-control" id="lastname" value={{user.last_name}} disabled readonly>
+            </div>
+        </div>
+        <div class="mb-4 row">
+            <label for="email" class="col-3 col-form-label fw-bold">Email</label>
+            <div class="col-9">
+                <input type="text" class="form-control" id="email" value={{user.email}} disabled readonly>
+            </div>
+        </div>
+        <div class="mb-4 row">
+            <label for="contact" class="col-3 col-form-label fw-bold">Contact</label>
+            <div class="col-9">
+                <input type="text" class="form-control" id="contact" value={{user.contact}} disabled readonly>
+            </div>
+        </div>
+        <a type="button" class="btn btn-primary" href="#">Edit Profile</a>
+    </div>
+</div>
+
+{{/block}}
+
+{{/extends}}
