@@ -42,12 +42,8 @@ exports.up = function(db) {
       'type': 'string',
       'length': 100
     },
-    'created_on': {
-      'type': 'datetime'
-    },
-    'last_logged_in': {
-      'type': 'datetime'
-    },
+    'created_on': 'datetime',
+    'last_logged_in': 'datetime',
     'user_type_id': {
       'type': 'int',
       'unsigned': true,
