@@ -3,6 +3,8 @@ const router = express.Router();
 
 // import in the User model
 const { User } = require('../models');
+
+// import the forms
 const { 
     createRegistrationForm,
     createLoginForm,

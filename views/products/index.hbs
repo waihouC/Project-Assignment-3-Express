@@ -1,0 +1,39 @@
+{{#extends 'base'}}
+
+{{#block 'content'}}
+
+<div class="row mb-4 position-relative">
+    <h1 class="display-4">{{page}}</h1>
+    <div class="col-12 py-1 bg-dark position-absolute bottom-0 divider"></div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12 col-lg-6 mx-auto">
+        <form method="GET">
+            <div class="input-group">
+                <button class="btn btn-light btn-outline-secondary" type="submit" aria-label="Search"><i class="bi bi-search"></i></button>
+                <input type="search" class="form-control form-control-lg shadow-none" placeholder="Search..." aria-label="Search input">
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+    {{#each products}}
+    <div class="col">
+        <a href="#" class="text-decoration-none">
+            <div class="card text-center text-primary h-100 border-light card-color">
+                <img src="{{this.image_url}}" class="card-img-top" alt="display-img" onerror=this.src="/img/ice-cream-icon-alt.jpg">
+                <div class="card-body">
+                    <h5 class="card-title">{{this.name}}</h5>
+                    <p class="card-text fw-bold">$12</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    {{/each}}
+</div>
+
+{{/block}}
+
+{{/extends}}
