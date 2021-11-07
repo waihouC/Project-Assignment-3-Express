@@ -14,6 +14,7 @@ var bootstrapField = function (name, object) {
 
     if (object.widget.classes.indexOf('form-control') === -1) {
         object.widget.classes.push('form-control');
+        object.widget.classes.push('shadow-none');
     }
 
     var validationclass = object.value && !object.error ? 'is-valid' : '';

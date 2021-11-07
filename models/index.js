@@ -14,7 +14,34 @@ const UserType = bookshelf.model('UserType', {
     }
 })
 
+const Category = bookshelf.model('Category',{
+    tableName: 'categories',
+    products() {
+        return this.hasMany('Product');
+    }
+})
+
+const Product = bookshelf.model('Product', {
+    tableName: 'products',
+    category() {
+        return this.belongsTo('Category');
+    },
+    prices() {
+        return this.hasMany('Price');
+    }
+});
+
+const Price = bookshelf.model('Price', {
+    tableName: 'prices',
+    product() {
+        return this.belongsTo('Product');
+    }
+});
+
 module.exports = { 
     User,
-    UserType
+    UserType,
+    Category,
+    Product,
+    Price
 };
