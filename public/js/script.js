@@ -6,3 +6,5 @@ $(document).ready(function () {
         });
     }, 5000);
 });
+
+$("input[type='number']").inputSpinner();

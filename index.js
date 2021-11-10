@@ -19,6 +19,11 @@ app.use(express.static("public"));
 wax.on(hbs.handlebars);
 wax.setLayoutPath("./views/layouts");
 
+// register handlebars helpers
+hbs.handlebars.registerHelper('calcPrice', function(price) {
+    return (price / 100).toFixed(2);
+});
+
 // enable forms
 app.use(
     express.urlencoded({

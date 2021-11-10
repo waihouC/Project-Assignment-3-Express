@@ -3,8 +3,13 @@
 {{#block 'content'}}
 
 <div class="row mb-4 position-relative">
-    <h1 class="display-4">{{page}}</h1>
-    <div class="col-12 py-1 bg-dark position-absolute bottom-0 divider"></div>
+    <div class="col-10">
+        <h1 class="display-4">{{page}}</h1>
+        <div class="col-12 py-1 bg-dark position-absolute bottom-0 divider"></div>
+    </div>
+    <div class="col-2 align-self-center">
+        <a class="btn btn-primary" href="#">Add Products</a>
+    </div>
 </div>
 
 <div class="row mb-4">
@@ -21,12 +26,12 @@
 <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
     {{#each products}}
     <div class="col">
-        <a href="#" class="text-decoration-none">
-            <div class="card text-center text-primary h-100 border-light card-color">
+        <a href="/products/{{this.id}}/details" class="text-decoration-none">
+            <div class="card text-center text-primary h-100 border-light bg-color">
                 <img src="{{this.image_url}}" class="card-img-top" alt="display-img" onerror=this.src="/img/ice-cream-icon-alt.jpg">
                 <div class="card-body">
                     <h5 class="card-title">{{this.name}}</h5>
-                    <p class="card-text fw-bold">$12</p>
+                    <p class="card-text fw-bold">${{calcPrice this.prices.0.cost}}</p>
                 </div>
             </div>
         </a>
