@@ -3,14 +3,17 @@
 {{#block 'content'}}
 
 <div class="row mt-3">
-    <div class="col d-flex justify-content-end gap-3 me-4">
-        <a class="btn btn-primary" href="#">Edit Product</a>
-        <a class="btn btn-danger" href="#">Delete Product</a>
+    <div class="col d-flex gap-3 mx-4">
+        <a class="btn btn-primary me-auto" href="/products/all-products">Back to Menu</a>
+        <a class="btn btn-primary" href="/products/{{product.id}}/update">Edit Product</a>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+            Delete Product
+        </button>
     </div>
 </div>
 
 <div class="row mt-5">
-    <div class="col-10 col-lg-8 mx-auto">
+    <div class="col-10 mx-auto">
         <div class="row bg-color">
             <div class="col-12 col-lg-6 p-0 ps-lg-0">
                 <img class="img-fluid w-100" src="{{product.image_url}}" alt="display-img" onerror=this.src="/img/ice-cream-icon-alt.jpg">
@@ -20,6 +23,9 @@
                     <div class="p-3 text-center">
                         <h1>{{product.name}}</h1>
                         <p class="fw-bold text-muted pt-2">{{product.description}}</p>
+                    </div>
+                    <div class="mb-3 text-center">
+                        <h5>{{product.category.name}}</h5>
                     </div>
                     <div class="p-2">
                         <div class="container px-3 mx-auto">
@@ -48,6 +54,26 @@
             </div>
         </div>
     </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Delete {{product.name}}</h5>
+      </div>
+      <div class="modal-body">
+        Do you want to delete this product?
+      </div>
+      <div class="modal-footer">
+          <form method="POST">
+                <button type="submit" class="btn btn-danger">Confirm</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
+          </form>
+      </div>
+    </div>
+  </div>
 </div>
 
 {{/block}}
