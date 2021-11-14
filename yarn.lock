@@ -410,6 +410,11 @@ bookshelf@^1.2.0:
     inflection "^1.12.0"
     lodash "^4.17.15"
 
+bootstrap-input-spinner@^3.1.7:
+  version "3.1.7"
+  resolved "https://registry.yarnpkg.com/bootstrap-input-spinner/-/bootstrap-input-spinner-3.1.7.tgz#d3d3a82167b044cc55ce4fa1d1abbeab827ef97e"
+  integrity sha512-Ck0d/DmC9c9d6GywSPiQR8OtBuoXDCW+surQeiKgl89Lw2qpqw5x1BRx+WBhXWnxzI4c1uJhTF128OKSj9qWPA==
+
 braces@^2.3.1:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/braces/-/braces-2.3.2.tgz#5979fd3f14cd531565e5fa2df1abfff1dfaee729"
@@ -1836,7 +1841,7 @@ mkdirp@~0.5.0:
   dependencies:
     minimist "^1.2.5"
 
-moment@^2.18.1, moment@^2.28.0:
+moment@^2.18.1, moment@^2.28.0, moment@^2.29.1:
   version "2.29.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
   integrity sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==

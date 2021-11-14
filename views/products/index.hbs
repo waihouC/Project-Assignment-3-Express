@@ -27,9 +27,9 @@
     {{#each products}}
     <div class="col">
         <a href="/products/{{this.id}}/details" class="text-decoration-none">
-            <div class="card text-center text-primary h-100 border-light bg-color">
+            <div class="card text-center text-primary h-100 border-light navbar-color">
                 <img src="{{this.image_url}}" class="card-img-top" alt="display-img" onerror=this.src="/img/ice-cream-icon-alt.jpg">
-                <div class="card-body">
+                <div class="card-body text-white">
                     <h5 class="card-title">{{this.name}}</h5>
                     <p class="card-text fw-bold">${{calcPrice this.prices.0.cost}}</p>
                 </div>
