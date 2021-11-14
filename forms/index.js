@@ -72,6 +72,7 @@ const createRegistrationForm = () => {
             validators: [validators.minlength(8)]
         }),
         'confirm_password': fields.password({
+            label: 'Confirm Password',
             required: true,
             errorAfterField: true,
             cssClasses: {
@@ -101,8 +102,80 @@ const createLoginForm = () => {
     });
 }
 
+const createNewProductForm = (categories) => {
+    return forms.create({
+        'name': fields.string({
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3']
+            },
+            validators: [validators.maxlength(100)]
+        }),
+        'description': fields.string({
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3']
+            },
+            widget: widgets.textarea()
+        }),
+        'image_url': fields.string({
+            label: 'Image URL',
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3']
+            }
+        }),
+        'category_id': fields.string({
+            label: 'Category',
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3']
+            },
+            widget: widgets.select(),
+            choices: categories
+        }),
+        'cost_regular': fields.string({
+            label: 'Regular Price (cents)',
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3']
+            },
+            validators: [validators.integer()]
+        }),
+        'volume_regular': fields.string({
+            label: 'Regular Volume (ml)',
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3']
+            },
+            validators: [validators.integer()]
+        }),
+        'cost_large': fields.string({
+            label: 'Large Price (cents)',
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3']
+            },
+            validators: [validators.integer()]
+        }),
+        'volume_large': fields.string({
+            label: 'Large Volume (ml)',
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3']
+            },
+            validators: [validators.integer()]
+        })
+    })
+}
+
 module.exports = { 
     createRegistrationForm,
     createLoginForm,
+    createNewProductForm,
     bootstrapField 
 };
