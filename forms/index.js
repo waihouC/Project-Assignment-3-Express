@@ -48,12 +48,13 @@ const createRegistrationForm = () => {
             },
             validators: [validators.maxlength(50)]
         }),
-        'email': fields.email({
+        'email': fields.string({
             required: true,
             errorAfterField: true,
             cssClasses: {
                 label: ['col-form-label fw-bold col-3']
-            }
+            },
+            validators: [validators.email()]
         }),
         'contact': fields.tel({
             required: true,
@@ -85,7 +86,7 @@ const createRegistrationForm = () => {
 
 const createLoginForm = () => {
     return forms.create({
-        'email': fields.email({
+        'email': fields.string({
             required: true,
             errorAfterField: true,
             cssClasses: {
@@ -102,7 +103,7 @@ const createLoginForm = () => {
     });
 }
 
-const createNewProductForm = (categories) => {
+const createNewProductForm = (categories, tags) => {
     return forms.create({
         'name': fields.string({
             required: true,
@@ -133,6 +134,15 @@ const createNewProductForm = (categories) => {
             },
             widget: widgets.select(),
             choices: categories
+        }),
+        'tags': fields.string({
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3']
+            },
+            widget: widgets.multipleSelect(),
+            choices: tags
         }),
         'cost_regular': fields.string({
             label: 'Regular Price (cents)',
