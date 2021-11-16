@@ -28,6 +28,9 @@ const Product = bookshelf.model('Product', {
     },
     prices() {
         return this.hasMany('Price');
+    },
+    tags() {
+        return this.belongsToMany('Tag');
     }
 });
 
@@ -38,10 +41,18 @@ const Price = bookshelf.model('Price', {
     }
 });
 
+const Tag = bookshelf.model('Tag',{
+    tableName: 'tags',
+    products() {
+        return this.belongsToMany('Product');
+    }
+})
+
 module.exports = { 
     User,
     UserType,
     Category,
     Product,
-    Price
+    Price,
+    Tag
 };

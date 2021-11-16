@@ -6,7 +6,8 @@ const router = express.Router();
 const {
     Product,
     Category,
-    Price
+    Price,
+    Tag
 } = require('../models');
 
 // data layer
@@ -19,7 +20,7 @@ async function getProductsByCategoryAndSize(categoryId, size) {
 
     let products = await q.fetch({
         'require': true,
-        'withRelated': ['category',
+        'withRelated': ['category', 'tags',
         {
             'prices': function(qb) {
                 qb.where('size', size);
@@ -36,7 +37,7 @@ async function getProductById(productId) {
     })
     .fetch({
         'require': true,
-        'withRelated': ['category', 
+        'withRelated': ['category', 'tags',
         {
             'prices': function(qb) {
                 qb.orderBy('volume', 'asc');
@@ -49,10 +50,18 @@ async function getProductById(productId) {
 
 async function getAllCategories() {
     let allCategories = await Category.fetchAll().map(function (category) {
-        return [category.get('id'), category.get('name')]
+        return [category.get('id'), category.get('name')];
     });
 
     return allCategories;
+}
+
+async function getAllTags() {
+    let allTags = await Tag.fetchAll().map(function (tag) {
+        return [tag.get('id'), tag.get('name')];
+    });
+
+    return allTags;
 }
 
 async function getPriceByProductandSize(productId, size) {
@@ -122,7 +131,8 @@ router.get('/:product_id/details', async (req, res) => {
 router.post('/:product_id/details', async (req, res) => {
     let product = await getProductById(req.params.product_id);
 
-    var name = product.name;
+    // store name before destroying
+    var name = product.get('name');
     await product.destroy();
 
     req.flash("success_messages", name + " product deleted successfully.");
@@ -132,8 +142,9 @@ router.post('/:product_id/details', async (req, res) => {
 // create new product
 router.get('/create', async (req, res) => {
     const allCategories = await getAllCategories();
+    const allTags = await getAllTags();
 
-    const productForm = createNewProductForm(allCategories);
+    const productForm = createNewProductForm(allCategories, allTags);
     res.render('products/create', {
         'form': productForm.toHTML(bootstrapField)
     });
@@ -142,8 +153,9 @@ router.get('/create', async (req, res) => {
 // submit new product
 router.post('/create', async (req, res) => {
     const allCategories = await getAllCategories();
+    const allTags = await getAllTags();
 
-    const productForm = createNewProductForm(allCategories);
+    const productForm = createNewProductForm(allCategories, allTags);
 
     productForm.handle(req, {
         'success': async (form) => {
@@ -180,6 +192,10 @@ router.post('/create', async (req, res) => {
                 await largePrice.save();
             }
 
+            if (form.data.tags) {
+                await newProduct.tags().attach(form.data.tags.split(","));
+            }
+
             req.flash("success_messages", "New product created.");
             res.redirect('/products/all-products');
         },
@@ -194,15 +210,19 @@ router.post('/create', async (req, res) => {
 // update product
 router.get('/:product_id/update', async (req, res) => {
     const allCategories = await getAllCategories();
+    const allTags = await getAllTags();
     
     let product = await getProductById(req.params.product_id);
 
-    let productForm = createNewProductForm(allCategories);
+    let productForm = createNewProductForm(allCategories, allTags);
     productForm.fields.name.value = product.get('name');
     productForm.fields.description.value = product.get('description');
     productForm.fields.image_url.value = product.get('image_url');
     productForm.fields.category_id.value = product.get('category_id');
 
+    let selectedTags = await product.related('tags').pluck('id');
+    productForm.fields.tags.value= selectedTags;
+    
     let productPrices = await product.related('prices');
 
     if (productPrices.length > 0)
@@ -232,10 +252,11 @@ router.get('/:product_id/update', async (req, res) => {
 // submit updated product
 router.post('/:product_id/update', async (req, res) => {
     const allCategories = await getAllCategories();
+    const allTags = await getAllTags();
     
     let product = await getProductById(req.params.product_id);
 
-    const productForm = createNewProductForm(allCategories);
+    const productForm = createNewProductForm(allCategories, allTags);
 
     productForm.handle(req, {
         'success': async (form) => {
@@ -246,6 +267,19 @@ router.post('/:product_id/update', async (req, res) => {
             product.set('category_id', form.data.category_id);
 
             await product.save();
+
+            let tagIds = form.data.tags.split(',');
+            // original selected tags
+            let existingTagIds = await product.related('tags').pluck('id');
+
+            // remove unselected tags
+            let toRemove = existingTagIds.filter(function(id){
+                return tagIds.includes(id) === false;
+            });
+            await product.tags().detach(toRemove);
+
+            // add in all tags selected
+            await product.tags().attach(tagIds);
 
             let regularPrice = await getPriceByProductandSize(req.params.product_id, 'R');
             // if exist, update else insert
