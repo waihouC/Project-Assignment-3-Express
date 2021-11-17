@@ -10,6 +10,9 @@ const {
     Tag
 } = require('../models');
 
+// import middleware
+const { checkIfAuthenticatedAsAdmin } = require('../middlewares');
+
 // data layer
 async function getProductsByCategoryAndSize(categoryId, size) {
     let q = Product.collection();
@@ -81,7 +84,7 @@ async function getPriceByProductandSize(productId, size) {
 // filter for regular size
 router.get('/all-products', async (req, res) => {
     let products = await getProductsByCategoryAndSize(null, 'R');
-
+    
     res.render('products/index', {
         'page': "All Products",
         'products': products.toJSON()
@@ -140,7 +143,7 @@ router.post('/:product_id/details', async (req, res) => {
 });
 
 // create new product
-router.get('/create', async (req, res) => {
+router.get('/create', checkIfAuthenticatedAsAdmin, async (req, res) => {
     const allCategories = await getAllCategories();
     const allTags = await getAllTags();
 
@@ -208,7 +211,7 @@ router.post('/create', async (req, res) => {
 });
 
 // update product
-router.get('/:product_id/update', async (req, res) => {
+router.get('/:product_id/update', checkIfAuthenticatedAsAdmin, async (req, res) => {
     const allCategories = await getAllCategories();
     const allTags = await getAllTags();
     

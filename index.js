@@ -24,6 +24,14 @@ hbs.handlebars.registerHelper('calcPrice', function(price) {
     return (price / 100).toFixed(2);
 });
 
+hbs.handlebars.registerHelper('IsAdmin', function(user, options) {
+    if (user && user.user_type_id == 1) {
+        return options.fn(this);
+    }
+    
+    return options.inverse(this);
+});
+
 // enable forms
 app.use(
     express.urlencoded({
@@ -46,6 +54,12 @@ app.use(flash());
 app.use(function (req, res, next) {
     res.locals.success_messages = req.flash("success_messages");
     res.locals.error_messages = req.flash("error_messages");
+    next();
+});
+
+// middleware to share user data with hbs files
+app.use(function(req, res, next) {
+    res.locals.user = req.session.user;
     next();
 });
 
