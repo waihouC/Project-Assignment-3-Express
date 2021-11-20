@@ -61,9 +61,11 @@
                             <li class="nav-item">
                                 <a class="nav-link active fs-5 text-light" href="#">Cart</a>
                             </li>
+                            {{#IsManager user}}
                             <li class="nav-item">
                                 <a class="nav-link active fs-5 text-light" href="#">Admin</a>
                             </li>
+                            {{/IsManager}}
                         </div>
                     </ul>
                 </div>

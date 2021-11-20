@@ -33,6 +33,7 @@ var bootstrapField = function (name, object) {
 const createRegistrationForm = () => {
     return forms.create({
         'first_name': fields.string({
+            label: 'First Name',
             required: true,
             errorAfterField: true,
             cssClasses: {
@@ -41,6 +42,7 @@ const createRegistrationForm = () => {
             validators: [validators.maxlength(50)]
         }),
         'last_name': fields.string({
+            label: 'Last Name',
             required: true,
             errorAfterField: true,
             cssClasses: {
@@ -81,7 +83,7 @@ const createRegistrationForm = () => {
             },
             validators: [validators.matchField('password')]
         })
-    })
+    });
 }
 
 const createLoginForm = () => {
@@ -103,7 +105,63 @@ const createLoginForm = () => {
     });
 }
 
-const createNewProductForm = (categories, tags) => {
+const createEditProfileForm = () => {
+    return forms.create({
+        'first_name': fields.string({
+            label: 'First Name',
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3']
+            },
+            validators: [validators.maxlength(50)]
+        }),
+        'last_name': fields.string({
+            label: 'Last Name',
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3']
+            },
+            validators: [validators.maxlength(50)]
+        }),
+        'contact': fields.tel({
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3']
+            },
+            validators: [validators.digits(), validators.minlength(8), validators.maxlength(8)]
+        }),
+        'new_password': fields.password({
+            label: 'New Password',
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3 py-0']
+            },
+            validators: [validators.minlength(8)]
+        }),
+        'confirm_password': fields.password({
+            label: 'Confirm New Password',
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3 py-0']
+            },
+            validators: [validators.matchField('new_password', "Does not match new password."),
+                (form, field, callback) => {
+                    if (form.fields.new_password && !field.data) {
+                        callback("Please confirm your password.");
+                    } else {
+                        callback();
+                    }
+                }]
+        })
+    });
+}
+
+const createProductForm = (categories, tags) => {
     return forms.create({
         'name': fields.string({
             required: true,
@@ -180,12 +238,13 @@ const createNewProductForm = (categories, tags) => {
             },
             validators: [validators.integer()]
         })
-    })
+    });
 }
 
 module.exports = { 
     createRegistrationForm,
     createLoginForm,
-    createNewProductForm,
+    createEditProfileForm,
+    createProductForm,
     bootstrapField 
 };
