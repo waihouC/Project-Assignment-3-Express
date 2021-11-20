@@ -177,12 +177,6 @@ const createProductForm = (categories, tags) => {
             },
             widget: widgets.textarea()
         }),
-        'image_url': fields.string({
-            label: 'Image URL',
-            cssClasses: {
-                label: ['col-form-label fw-bold col-3']
-            }
-        }),
         'category_id': fields.string({
             label: 'Category',
             required: true,
@@ -237,6 +231,9 @@ const createProductForm = (categories, tags) => {
                 label: ['col-form-label fw-bold col-3']
             },
             validators: [validators.integer()]
+        }),
+        'image_url': fields.string({
+            widget: widgets.hidden()
         })
     });
 }
