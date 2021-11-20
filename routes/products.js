@@ -6,94 +6,20 @@ const router = express.Router();
 // import in the models
 const {
     Product,
-    Category,
-    Price,
-    Tag
+    Price
 } = require('../models');
+
+// import in the DAL
+const {
+    getProductsByCategoryAndSize,
+    getProductById,
+    getAllCategories,
+    getAllTags,
+    getPriceByProductandSize
+} = require('../dal/products');
 
 // import middleware
 const { checkIfAuthenticatedAsAdmin } = require('../middlewares');
-
-// data layer
-async function getProductsByCategoryAndSize(queryTerm, categoryId, size) {
-    let q = Product.collection();
-
-    if (categoryId) {
-        q.where('category_id', categoryId);
-    }
-
-    if (queryTerm) {
-        q.query('join', 'products_tags', 'products.id', 'product_id')
-         .query('join', 'tags', 'tags.id', 'tag_id')
-         .where((qb) => {
-            qb.where('products.name', 'like', '%' + queryTerm + '%')
-            
-            if (queryTerm.includes(",")) {
-                qb.orWhere('tags.name', 'in', queryTerm.split(","))
-            } else {
-                qb.orWhere('tags.name', queryTerm)
-            }
-         });
-    }
-    
-    let products = await q.fetch({
-        'require': false,
-        'withRelated': ['category', 'tags',
-        {
-            'prices': (qb) => {
-                qb.where('size', size);
-            }
-        }]
-    });
-    
-    return products;
-}
-
-async function getProductById(productId) {
-    let product = await Product.where({
-        'id': productId
-    })
-    .fetch({
-        'require': true,
-        'withRelated': ['category', 'tags',
-        {
-            'prices': function(qb) {
-                qb.orderBy('volume', 'asc');
-            }
-        }]
-    });
-
-    return product;
-}
-
-async function getAllCategories() {
-    let allCategories = await Category.fetchAll().map(function (category) {
-        return [category.get('id'), category.get('name')];
-    });
-
-    return allCategories;
-}
-
-async function getAllTags() {
-    let allTags = await Tag.fetchAll().map(function (tag) {
-        return [tag.get('id'), tag.get('name')];
-    });
-
-    return allTags;
-}
-
-async function getPriceByProductandSize(productId, size) {
-    let price = await Price.where({
-        'product_id': productId,
-        'size': size
-    })
-    .fetch({
-        'require': false,
-        'withRelated': ['product']
-    });
-
-    return price;
-}
 
 
 // show all products with regular size info
@@ -328,7 +254,10 @@ router.get('/create', checkIfAuthenticatedAsAdmin, async (req, res) => {
 
     const productForm = createProductForm(allCategories, allTags);
     res.render('products/create', {
-        'form': productForm.toHTML(bootstrapField)
+        'form': productForm.toHTML(bootstrapField),
+        'cloudinaryName': process.env.CLOUDINARY_NAME,
+        'cloudinaryApiKey': process.env.CLOUDINARY_API_KEY,
+        'cloudinaryPreset': process.env.CLOUDINARY_UPLOAD_PRESET
     });
 });
 
@@ -427,7 +356,10 @@ router.get('/:product_id/update', checkIfAuthenticatedAsAdmin, async (req, res) 
 
     res.render('products/update', {
         'product': product.toJSON(),
-        'form': productForm.toHTML(bootstrapField)
+        'form': productForm.toHTML(bootstrapField),
+        'cloudinaryName': process.env.CLOUDINARY_NAME,
+        'cloudinaryApiKey': process.env.CLOUDINARY_API_KEY,
+        'cloudinaryPreset': process.env.CLOUDINARY_UPLOAD_PRESET
     });
 });
 
@@ -445,7 +377,6 @@ router.post('/:product_id/update', async (req, res) => {
             product.set('name', form.data.name);
             product.set('description', form.data.description);
             product.set('image_url', form.data.image_url);
-            product.set('created_on', new Date());
             product.set('category_id', form.data.category_id);
 
             await product.save();

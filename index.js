@@ -2,6 +2,7 @@ const express = require("express");
 const hbs = require("hbs");
 const wax = require("wax-on");
 require("dotenv").config();
+
 const session = require('express-session');
 const flash = require('connect-flash');
 const FileStore = require('session-file-store')(session);
@@ -89,11 +90,13 @@ app.use(function(req, res, next) {
 const landingRoutes = require('./routes/landing');
 const userRoutes = require('./routes/users');
 const productRoutes = require('./routes/products');
+const cloudinaryRoutes = require('./routes/cloudinary.js');
 
 async function main() {
     app.use('/', landingRoutes);
     app.use('/users', userRoutes);
     app.use('/products', productRoutes);
+    app.use('/cloudinary', cloudinaryRoutes);
 }
 
 main();
