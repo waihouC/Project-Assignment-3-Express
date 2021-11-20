@@ -14,16 +14,23 @@
     {{/IsAdmin}}
 </div>
 
-<div class="row mb-4">
+<div class="row mb-5">
     <div class="col-12 col-lg-6 mx-auto">
-        <form method="GET">
-            <div class="input-group">
-                <button class="btn btn-light btn-outline-secondary" type="submit" aria-label="Search"><i class="bi bi-search"></i></button>
-                <input type="search" class="form-control form-control-lg shadow-none" placeholder="Search..." aria-label="Search input">
-            </div>
+        <label class="form-label fw-bold">Search {{page}}:</label>
+        <form method="POST">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
+            {{{form}}}
         </form>
     </div>
 </div>
+
+{{#if isSearch}}
+<div class="row mb-4">
+    <div class="col">
+        <h5>{{products.length}} item(s) found:</h5>
+    </div>
+</div>
+{{/if}}
 
 <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
     {{#each products}}

@@ -1,5 +1,6 @@
 const express = require("express");
-const { createNewProductForm, bootstrapField } = require("../forms");
+const { createProductForm, bootstrapField } = require("../forms");
+const { createSearchForm, searchBootstrapField } = require("../forms/search");
 const router = express.Router();
 
 // import in the models
@@ -14,18 +15,32 @@ const {
 const { checkIfAuthenticatedAsAdmin } = require('../middlewares');
 
 // data layer
-async function getProductsByCategoryAndSize(categoryId, size) {
+async function getProductsByCategoryAndSize(queryTerm, categoryId, size) {
     let q = Product.collection();
 
     if (categoryId) {
-        q.where('category_id', categoryId)
+        q.where('category_id', categoryId);
     }
 
+    if (queryTerm) {
+        q.query('join', 'products_tags', 'products.id', 'product_id')
+         .query('join', 'tags', 'tags.id', 'tag_id')
+         .where((qb) => {
+            qb.where('products.name', 'like', '%' + queryTerm + '%')
+            
+            if (queryTerm.includes(",")) {
+                qb.orWhere('tags.name', 'in', queryTerm.split(","))
+            } else {
+                qb.orWhere('tags.name', queryTerm)
+            }
+         });
+    }
+    
     let products = await q.fetch({
-        'require': true,
+        'require': false,
         'withRelated': ['category', 'tags',
         {
-            'prices': function(qb) {
+            'prices': (qb) => {
                 qb.where('size', size);
             }
         }]
@@ -81,44 +96,208 @@ async function getPriceByProductandSize(productId, size) {
 }
 
 
-// filter for regular size
+// show all products with regular size info
 router.get('/all-products', async (req, res) => {
-    let products = await getProductsByCategoryAndSize(null, 'R');
+    const searchForm = createSearchForm();
     
+    const products = await getProductsByCategoryAndSize(null, null, 'R');
+
     res.render('products/index', {
         'page': "All Products",
-        'products': products.toJSON()
+        'products': products.toJSON(),
+        'form': searchForm.toHTML(searchBootstrapField)
     });
+});
+
+// search all products
+router.post('/all-products', async (req, res) => {
+    const searchForm = createSearchForm();
+    
+    searchForm.handle(req, {
+        'success': async (form) => {
+            let products = await getProductsByCategoryAndSize(form.data.search_query, null, 'R');
+
+            res.render('products/index', {
+                'isSearch': true,
+                'page': "All Products",
+                'products': products.toJSON(),
+                'form': form.toHTML(searchBootstrapField)
+            });
+        },
+        'error': async (form) => {
+            let products = await getProductsByCategoryAndSize(null, null, 'R');
+
+            res.render('products/index', {
+                'isSearch': false,
+                'page': "All Products",
+                'products': products.toJSON(),
+                'form': form.toHTML(searchBootstrapField)
+            });
+        },
+        'empty': async (form) => {
+            let products = await getProductsByCategoryAndSize(null, null, 'R');
+
+            res.render('products/index', {
+                'isSearch': false,
+                'page': "All Products",
+                'products': products.toJSON(),
+                'form': form.toHTML(searchBootstrapField)
+            });
+        }
+    })
 });
 
 // standard products
 router.get('/standard', async (req, res) => {
-    let products = await getProductsByCategoryAndSize(1, 'R');
+    const searchForm = createSearchForm();
+    
+    const products = await getProductsByCategoryAndSize(null, 1, 'R');
 
     res.render('products/index', {
         'page': "Standard",
-        'products': products.toJSON()
+        'products': products.toJSON(),
+        'form': searchForm.toHTML(searchBootstrapField)
     });
+});
+
+// search standard products
+router.post('/standard', async (req, res) => {
+    const searchForm = createSearchForm();
+    
+    searchForm.handle(req, {
+        'success': async (form) => {
+            let products = await getProductsByCategoryAndSize(form.data.search_query, 1, 'R');
+
+            res.render('products/index', {
+                'isSearch': true,
+                'page': "Standard",
+                'products': products.toJSON(),
+                'form': form.toHTML(searchBootstrapField)
+            });
+        },
+        'error': async (form) => {
+            let products = await getProductsByCategoryAndSize(null, 1, 'R');
+
+            res.render('products/index', {
+                'isSearch': false,
+                'page': "Standard",
+                'products': products.toJSON(),
+                'form': form.toHTML(searchBootstrapField)
+            });
+        },
+        'empty': async (form) => {
+            let products = await getProductsByCategoryAndSize(null, 1, 'R');
+
+            res.render('products/index', {
+                'isSearch': false,
+                'page': "Standard",
+                'products': products.toJSON(),
+                'form': form.toHTML(searchBootstrapField)
+            });
+        }
+    })
 });
 
 // premium products
 router.get('/premium', async (req, res) => {
-    let products = await getProductsByCategoryAndSize(2, 'R');
+    const searchForm = createSearchForm();
+    
+    const products = await getProductsByCategoryAndSize(null, 2, 'R');
 
     res.render('products/index', {
         'page': "Premium",
-        'products': products.toJSON()
+        'products': products.toJSON(),
+        'form': searchForm.toHTML(searchBootstrapField)
     });
+});
+
+// search premium products
+router.post('/premium', async (req, res) => {
+    const searchForm = createSearchForm();
+    
+    searchForm.handle(req, {
+        'success': async (form) => {
+            let products = await getProductsByCategoryAndSize(form.data.search_query, 2, 'R');
+
+            res.render('products/index', {
+                'isSearch': true,
+                'page': "Premium",
+                'products': products.toJSON(),
+                'form': form.toHTML(searchBootstrapField)
+            });
+        },
+        'error': async (form) => {
+            let products = await getProductsByCategoryAndSize(null, 2, 'R');
+
+            res.render('products/index', {
+                'isSearch': false,
+                'page': "Premium",
+                'products': products.toJSON(),
+                'form': form.toHTML(searchBootstrapField)
+            });
+        },
+        'empty': async (form) => {
+            let products = await getProductsByCategoryAndSize(null, 2, 'R');
+
+            res.render('products/index', {
+                'isSearch': false,
+                'page': "Premium",
+                'products': products.toJSON(),
+                'form': form.toHTML(searchBootstrapField)
+            });
+        }
+    })
 });
 
 // healthy products
 router.get('/healthy', async (req, res) => {
-    let products = await getProductsByCategoryAndSize(3, 'R');
+    const searchForm = createSearchForm();
+    
+    const products = await getProductsByCategoryAndSize(null, 3, 'R');
 
     res.render('products/index', {
         'page': "Healthy",
-        'products': products.toJSON()
+        'products': products.toJSON(),
+        'form': searchForm.toHTML(searchBootstrapField)
     });
+});
+
+// search healthy products
+router.post('/healthy', async (req, res) => {
+    const searchForm = createSearchForm();
+    
+    searchForm.handle(req, {
+        'success': async (form) => {
+            let products = await getProductsByCategoryAndSize(form.data.search_query, 3, 'R');
+
+            res.render('products/index', {
+                'isSearch': true,
+                'page': "Healthy",
+                'products': products.toJSON(),
+                'form': form.toHTML(searchBootstrapField)
+            });
+        },
+        'error': async (form) => {
+            let products = await getProductsByCategoryAndSize(null, 3, 'R');
+
+            res.render('products/index', {
+                'isSearch': false,
+                'page': "Healthy",
+                'products': products.toJSON(),
+                'form': form.toHTML(searchBootstrapField)
+            });
+        },
+        'empty': async (form) => {
+            let products = await getProductsByCategoryAndSize(null, 3, 'R');
+
+            res.render('products/index', {
+                'isSearch': false,
+                'page': "Healthy",
+                'products': products.toJSON(),
+                'form': form.toHTML(searchBootstrapField)
+            });
+        }
+    })
 });
 
 // product details page
@@ -147,7 +326,7 @@ router.get('/create', checkIfAuthenticatedAsAdmin, async (req, res) => {
     const allCategories = await getAllCategories();
     const allTags = await getAllTags();
 
-    const productForm = createNewProductForm(allCategories, allTags);
+    const productForm = createProductForm(allCategories, allTags);
     res.render('products/create', {
         'form': productForm.toHTML(bootstrapField)
     });
@@ -158,7 +337,7 @@ router.post('/create', async (req, res) => {
     const allCategories = await getAllCategories();
     const allTags = await getAllTags();
 
-    const productForm = createNewProductForm(allCategories, allTags);
+    const productForm = createProductForm(allCategories, allTags);
 
     productForm.handle(req, {
         'success': async (form) => {
@@ -217,7 +396,7 @@ router.get('/:product_id/update', checkIfAuthenticatedAsAdmin, async (req, res) 
     
     let product = await getProductById(req.params.product_id);
 
-    let productForm = createNewProductForm(allCategories, allTags);
+    let productForm = createProductForm(allCategories, allTags);
     productForm.fields.name.value = product.get('name');
     productForm.fields.description.value = product.get('description');
     productForm.fields.image_url.value = product.get('image_url');
@@ -259,7 +438,7 @@ router.post('/:product_id/update', async (req, res) => {
     
     let product = await getProductById(req.params.product_id);
 
-    const productForm = createNewProductForm(allCategories, allTags);
+    const productForm = createProductForm(allCategories, allTags);
 
     productForm.handle(req, {
         'success': async (form) => {
@@ -276,7 +455,7 @@ router.post('/:product_id/update', async (req, res) => {
             let existingTagIds = await product.related('tags').pluck('id');
 
             // remove unselected tags
-            let toRemove = existingTagIds.filter(function(id){
+            let toRemove = existingTagIds.filter(function(id) {
                 return tagIds.includes(id) === false;
             });
             await product.tags().detach(toRemove);

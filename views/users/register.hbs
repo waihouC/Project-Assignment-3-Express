@@ -11,6 +11,7 @@
     <div class="col-8 col-xl-4 mx-auto d-flex flex-column bg-white p-3">
         <h5 class="mx-auto my-3">Please fill in the information below:</h5>
         <form method="POST">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
             {{{form}}}
             <div class="d-flex justify-content-center">
                 <input type="submit" value="Create account" class="btn btn-primary m-3"/>
