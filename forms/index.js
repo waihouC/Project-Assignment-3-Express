@@ -149,14 +149,7 @@ const createEditProfileForm = () => {
             cssClasses: {
                 label: ['col-form-label fw-bold col-3 py-0']
             },
-            validators: [validators.matchField('new_password', "Does not match new password."),
-                (form, field, callback) => {
-                    if (form.fields.new_password && !field.data) {
-                        callback("Please confirm your password.");
-                    } else {
-                        callback();
-                    }
-                }]
+            validators: [validators.matchField('new_password', "Does not match new password.")]
         })
     });
 }

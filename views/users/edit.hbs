@@ -1,0 +1,39 @@
+{{#extends 'base'}}
+
+{{#block 'content'}}
+
+<div class="row mb-4 position-relative">
+    <h1 class="display-4">Edit User Profile</h1>
+    <div class="col-12 py-1 bg-dark position-absolute bottom-0 divider"></div>
+</div>
+
+<div class="row">
+    <div class="col-9 col-xl-6 mx-auto bg-white p-5">
+        <form method="POST">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
+            {{{form}}}
+            <div class="d-flex justify-content-center">
+                <input type="submit" value="Save" class="btn btn-primary m-3"/>
+                <a href="/users/profile" class="btn btn-danger m-3">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{/block}}
+
+{{#block 'js'}}
+<script src="https://unpkg.com/bootstrap-show-password@1.2.1/dist/bootstrap-show-password.min.js"></script>
+
+<script>
+    $("input[type='password']").attr("data-toggle", "password");
+
+    $(document).ready(function() {
+        $(".invalid-feedback").clone().appendTo(".input-group");
+    });
+    
+</script>
+
+{{/block}}
+
+{{/extends}}
