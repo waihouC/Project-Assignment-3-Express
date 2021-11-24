@@ -8,10 +8,14 @@ const { User } = require('../models');
 const { 
     createRegistrationForm,
     createLoginForm,
+    createEditProfileForm,
     bootstrapField
 } = require('../forms');
 
-// data layer
+// import middleware
+const { checkIfAuthenticated } = require('../middlewares');
+
+// data service
 async function getUserByEmail(email) {
     let user = await User.where({
         'email': email
@@ -33,7 +37,7 @@ router.get('/register', (req, res) => {
 });
 
 // submit user registration
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
     const registerForm = createRegistrationForm();
     registerForm.handle(req, {
         success: async (form) => {
@@ -114,32 +118,94 @@ router.post('/login', async (req, res) => {
 });
 
 // user profile
-router.get('/profile', (req, res) => {
-    const user = req.session.user;
-
-    if (!user) {
-        req.flash('error_messages', 'You do not have permission to view this page.');
-        res.redirect('/users/login');
-    } else {
-        res.render('users/profile', {
-            'user': user
-        });
-    }
-})
+router.get('/profile', checkIfAuthenticated, (req, res) => {
+    res.render('users/profile');
+});
 
 // update user profile
+router.get('/edit', checkIfAuthenticated, async (req, res) => {
+    const userProfile = await getUserByEmail(req.session.user.email);
 
+    let profileForm = createEditProfileForm();
+    profileForm.fields.first_name.value = userProfile.get('first_name');
+    profileForm.fields.last_name.value = userProfile.get('last_name');
+    profileForm.fields.contact.value = userProfile.get('contact');
+
+    res.render('users/edit', {
+        'form': profileForm.toHTML(bootstrapField)
+    });
+});
+
+// submit user profile
+router.post('/edit', async (req, res) => {
+    let userProfile = await getUserByEmail(req.session.user.email);
+
+    let profileForm = createEditProfileForm();
+    profileForm.handle(req, {
+        'success': async function(form) {
+            // validate if confirm password is not empty
+            if (form.data.new_password) {
+                if (!form.data.confirm_password) {
+                    req.flash("error_messages", "Please confirm new password.");
+                    res.redirect('/users/edit');
+                    return;
+                }
+            }
+            
+            // validate new password is not same as old password
+            if (form.data.new_password) {
+                if (userProfile.get('password') === form.data.new_password) {
+                    req.flash("error_messages", "New password cannot be the same as old password.");
+                    res.redirect('/users/edit');
+                    return;
+                } else {
+                    userProfile.set('password', form.data.new_password);
+                }
+            }
+            
+            // update other fields
+            userProfile.set('first_name', form.data.first_name);
+            userProfile.set('last_name', form.data.last_name);
+            userProfile.set('contact', form.data.contact);
+            
+            await userProfile.save();
+
+            // update user session
+            req.session.user = {
+                first_name: userProfile.get('first_name'),
+                last_name: userProfile.get('last_name'),
+                email: userProfile.get('email'),
+                contact: userProfile.get('contact')
+            };
+
+            req.flash("success_messages", "User profile updated successfully.");
+            res.redirect('/users/profile');
+        },
+        'error': (form) => {
+            res.render('users/edit', {
+                'form': form.toHTML(bootstrapField)
+            });
+        },
+        'empty': (form) => {
+            res.render('users/edit', {
+                'form': form.toHTML(bootstrapField)
+            });
+        }
+    });
+});
 
 // user logout
 router.get('/logout', async (req, res) => {
-    let user = await getUserByEmail(req.session.user.email);
+    if (req.session.user) {
+        let user = await getUserByEmail(req.session.user.email);
 
-     // update last logged in
-     user.set('last_logged_in', new Date());
-     await user.save();
+        // update last logged in
+        user.set('last_logged_in', new Date());
+        await user.save();
+    }
 
-     req.session.user = null;
-     res.redirect('/users/login');
-})
+    req.session.user = null;
+    res.redirect('/users/login');
+});
 
 module.exports = router;
