@@ -43,6 +43,11 @@ hbs.handlebars.registerHelper('IsManager', function(user, options) {
     return options.inverse(this);
 });
 
+hbs.handlebars.registerHelper('retSize', function(size) {
+    if (size === 'R') return "Regular";
+    if (size === 'L') return "Large";
+})
+
 // enable forms
 app.use(
     express.urlencoded({
@@ -76,7 +81,10 @@ app.use(csrf());
 
 // middleware to share CSRF with hbs files
 app.use(function(req, res, next) {
-    res.locals.csrfToken = req.csrfToken();
+    if (req.csrfToken) {
+        res.locals.csrfToken = req.csrfToken();
+    }
+    
     next();
 });
 
@@ -91,12 +99,14 @@ const landingRoutes = require('./routes/landing');
 const userRoutes = require('./routes/users');
 const productRoutes = require('./routes/products');
 const cloudinaryRoutes = require('./routes/cloudinary.js');
+const cartRoutes = require('./routes/cart');
 
 async function main() {
     app.use('/', landingRoutes);
     app.use('/users', userRoutes);
     app.use('/products', productRoutes);
     app.use('/cloudinary', cloudinaryRoutes);
+    app.use('/cart', cartRoutes);
 }
 
 main();

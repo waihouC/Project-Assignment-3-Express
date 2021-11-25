@@ -1,0 +1,126 @@
+{{#extends 'base'}}
+
+{{#block 'content'}}
+
+<div class="row mb-4 position-relative">
+    <h1 class="display-4">Cart</h1>
+    <div class="col-12 py-1 bg-dark position-absolute bottom-0 divider"></div>
+</div>
+
+{{#if user}}
+<div class="row pt-4">
+    {{#if shoppingCart}}
+    <div class="col-12 col-lg-10 table-responsive-lg mx-auto p-0">
+        <table class="table table-light border border-dark" id="cartTable">
+            <thead class="table-dark">
+                <tr>
+                    <th></th>
+                    <th scope="col" class="px-3">Product</th>
+                    <th scope="col" class="px-3">Size</th>
+                    <th scope="col" class="px-3">Price</th>
+                    <th scope="col" class="text-center px-3">Quantity</th>
+                    <th scope="col" class="px-3 ps-5">Subtotal</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody class="fs-5" data-row={{shoppingCart.length}}>
+                {{#each shoppingCart}}
+                <form method="POST" action="/cart/{{this.product.id}}/{{this.price.id}}/update">
+                <input type="hidden" name="_csrf" value="{{../csrfToken}}" />
+                <tr id="row_{{@index}}">
+                    <td class="p-3 text-center"><a href="/cart/{{this.product.id}}/{{this.price.id}}/remove" class="btn-close"></a></td>
+                    <td class="p-3">{{this.product.name}}</td>
+                    <td class="p-3">{{retSize this.price.size}}</td>
+                    <td class="p-3" style="min-width: 100px; max-width: 120px">
+                        <div class="d-flex align-items-center">
+                            $<input readonly disabled class="form-control-plaintext p-0 input-cost" type="text" name="cost" value="{{calcPrice this.price.cost}}" />
+                        </div>
+                    </td>
+                    <td class="p-3 btn-column" style="min-width: 170px">
+                        <div>
+                            <input class="form-control-sm input-quantity" name="quantity" type="number" value="{{this.quantity}}" min="1" max="100" data-index="{{@index}}" />
+                        </div>
+                    </td>
+                    <td class="p-3 ps-5">
+                        <div class="d-flex align-items-center" style="min-width: 100px; max-width: 120px">
+                            $<input readonly disabled class="form-control-plaintext p-0 input-subtotal" type="text" name="subtotal">
+                        </div>
+                    </td>
+                    <td class="p-3 text-center btn-column">
+                        <input type="submit" value="Update" class="btn btn-primary btn-sm btn-update" style="display: none;" id="update_{{@index}}" />
+                    </td>
+                </tr>
+                </form>
+                {{/each}}
+                <tr>
+                    <td colspan="5" class="fw-bold text-end p-3">Total</td>
+                    <td colspan="2" class="fw-bold p-3 ps-5">
+                        <div class="d-flex align-items-center">
+                            $<input readonly disabled class="form-control-plaintext fw-bold p-0 input-total" type="text" name="total" />
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>    
+    {{else}}
+    <div class="col-12 col-lg-10 mx-auto navbar-color text-light fw-bold fs-5 p-4">Your cart is currently empty.</div>
+    {{/if}}
+</div>
+
+<div class="row mt-4">
+    <div class="col-12 col-lg-10 d-flex mx-auto p-0">
+        <a class="btn btn-primary btn-lg me-auto" role="button" href="/products/all-products">Return to Menu</a>
+        {{#if shoppingCart}}
+        <a href="/checkout" class='btn btn-success btn-lg'>Checkout</a>
+        {{/if}}
+    </div>
+</div>
+{{else}}
+<div class="row pt-4">
+    <div class="col-12 col-lg-10 mx-auto navbar-color text-light fw-bold fs-5 p-4">You must log in to view your cart.</div>
+</div>
+{{/if}}
+
+{{/block}}
+
+{{#block 'js'}}
+
+<script>
+    // calculate subtotal and total
+    function calculatePrices(table) {
+        var noOfRows = table.data("row");
+        var total = 0;
+        
+        for (var i = 0; i < noOfRows; i++) {
+            var row = table.find("#row_" + i);
+            var qty = parseFloat(row.find(".input-quantity").val());
+            var price = parseFloat(row.find(".input-cost").val());
+            var subTotal = qty * price
+            row.find(".input-subtotal").val(isNaN(subTotal) ? "--" : subTotal.toFixed(2));
+            total += subTotal;
+        }
+
+        var lastRow = table.find("tr").last();
+        lastRow.find(".input-total").val(isNaN(total) ? "--" : total.toFixed(2));
+    }
+    
+    // make Update button appear if input value changes
+    $(document).ready(function () {
+        $(".input-quantity").on("change", function (event) {
+            var btnName = "update_" + $(this).data("index");
+            $(this).closest("tr").find("#" + btnName).removeAttr("style");
+        })
+    })
+
+    // calculate all prices everytime table is loaded
+    $(window).on("load", function () {
+        var table = $("#cartTable").children("tbody");
+        calculatePrices(table);
+    })
+
+</script>
+
+{{/block}}
+
+{{/extends}}

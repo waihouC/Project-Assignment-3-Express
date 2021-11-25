@@ -87,9 +87,21 @@ const getPriceByProductandSize = async (productId, size) => {
         'size': size
     })
     .fetch({
-        'require': false,
+        'require': true,
         'withRelated': ['product']
     });
+
+    return price;
+}
+
+const getPriceById = async (id) => {
+    let price = await Price.where({
+        'id': id
+    })
+    .fetch({
+        'require': true,
+        'withRelated': ['product']
+    })
 
     return price;
 }
@@ -99,5 +111,6 @@ module.exports = {
     getProductById,
     getAllCategories,
     getAllTags,
-    getPriceByProductandSize
+    getPriceByProductandSize,
+    getPriceById
 };

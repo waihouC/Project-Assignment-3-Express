@@ -52,8 +52,16 @@
                                 <div class="col-3 py-0 pe-0">Regular ({{product.prices.0.volume}} ml)</div>
                                 <div class="col-3 p-0 text-center">${{calcPrice product.prices.0.cost}}</div>
                                 {{#if user}}
-                                <div class="col-3 p-0 bg-white"><input class="form-control-sm" type="number" value="1" min="0" max="100" /></div>
-                                <div class="col-3 ps-3"><a class="btn btn-success btn-sm" href="#">Add to cart</a></div>
+                                <div class="col-6">
+                                    <form class="row" method="GET" action="/cart/{{product.id}}/{{product.prices.0.size}}/add">
+                                        <div class="col-6 p-0 bg-white">
+                                            <input class="form-control-sm" width="style: 100px" name="quantity" type="number" value="1" min="0" max="100" id="reg_quantity" />
+                                        </div>
+                                        <div class="col-6 ps-3">
+                                            <input class="btn btn-success btn-sm" type="submit" value="Add to cart">
+                                        </div>
+                                    </form>
+                                </div>
                                 {{/if}}
                             </div>
                         </div>
@@ -62,8 +70,16 @@
                                 <div class="col-3 py-0 pe-0">Large ({{product.prices.1.volume}} ml)</div>
                                 <div class="col-3 p-0 text-center">${{calcPrice product.prices.1.cost}}</div>
                                 {{#if user}}
-                                <div class="col-3 p-0 bg-white"><input class="form-control-sm" type="number" value="1" min="0" max="100" /></div>
-                                <div class="col-3 ps-3"><a class="btn btn-success btn-sm" href="#">Add to cart</a></div>
+                                <div class="col-6">
+                                    <form class="row" method="GET" action="/cart/{{product.id}}/{{product.prices.1.size}}/add">
+                                        <div class="col-6 p-0 bg-white">
+                                            <input class="form-control-sm" name="quantity" type="number" value="1" min="0" max="100" id="lg_quantity"/>
+                                        </div>
+                                        <div class="col-6 ps-3">
+                                            <input class="btn btn-success btn-sm" type="submit" value="Add to cart">
+                                        </div>
+                                    </form>
+                                </div>
                                 {{/if}}
                             </div>
                         </div>

@@ -41,10 +41,23 @@ const Price = bookshelf.model('Price', {
     }
 });
 
-const Tag = bookshelf.model('Tag',{
+const Tag = bookshelf.model('Tag', {
     tableName: 'tags',
     products() {
         return this.belongsToMany('Product');
+    }
+})
+
+const CartItem = bookshelf.model('CartItem', {
+    tableName: 'cart_items',
+    product() {
+        return this.belongsTo('Product');
+    },
+    price() {
+        return this.belongsTo('Price');
+    },
+    user() {
+        return this.belongsTo('User');
     }
 })
 
@@ -54,5 +67,6 @@ module.exports = {
     Category,
     Product,
     Price,
-    Tag
+    Tag,
+    CartItem
 };
