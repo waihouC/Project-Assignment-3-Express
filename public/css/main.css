@@ -48,3 +48,8 @@ body {
 .bg-color {
     background-color:#f2d5ad;
 }
+
+.btn-column {
+    width: 100px;
+    white-space: nowrap;
+}
