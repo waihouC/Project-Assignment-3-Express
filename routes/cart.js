@@ -41,8 +41,8 @@ router.get('/:product_id/:size/add', async (req, res) => {
     const cartItem = await cart.addToCart(id, price.get('id'), quantity);
 
     let name;
-    if (cartItem.toJSON().product) {
-        name = cartItem.toJSON().product.name;  // existing cart item
+    if (cartItem.related('product').get('name')) {
+        name = cartItem.related('product').get('name');  // existing cart item
     } else {
         const product = await getProductById(id); // new cart item
         name = product.get('name');
@@ -84,8 +84,8 @@ router.post('/:product_id/:price_id/update', async function(req, res) {
     var priceId = req.params.price_id;
 
     let cartItem = await cart.updateQuantity(productId, priceId, newQuantity);
-    var name = cartItem.toJSON().product.name;
-    var size = cartItem.toJSON().price.size;
+    var name = cartItem.related('product').get('name');
+    var size = cartItem.related('price').get('size');
     
     if (cartItem) {
         req.flash("success_messages", name + " (" + returnSize(size) + ") has been updated.");
