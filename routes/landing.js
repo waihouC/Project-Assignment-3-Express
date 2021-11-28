@@ -1,17 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
-// import moment js
-let moment = require("moment");
-
 // import in the Product model
 const { Product } = require('../models');
 
 router.get('/', async (req, res) => {
-    // retrieve top 3 latest products created within 2 months
+    // retrieve top 3 latest products
     const products = await Product
-        .where('created_on', '>=', moment().subtract(2, 'months').format())
         .query(function(qb) {
+            qb.orderBy('created_on', 'DESC');
             qb.limit(3);
         })
         .fetchAll();

@@ -6,10 +6,46 @@
     <div class="col-12 col-lg-8 mx-auto navbar-color text-light p-4">
         <h3>Thank you for your order.</h3>
         <p>&nbsp;</p>
-        <p>We will be preparing your order shortly.</p>
+        <p>You may print this page for your records.</p>
+        <div class="p-0 mt-4">
+            <a class="btn btn-primary me-auto" role="button" href="/">Return to Home</a>
+        </div>
     </div>
-    <div class="col-12 col-lg-8 mx-auto p-0 mt-4">
-        <a class="btn btn-primary btn-lg me-auto" role="button" href="/">Return to Home</a>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12 col-lg-8 table-responsive-lg mx-auto p-0">
+        <table class="table table-light border border-dark">
+            <thead class="table-light">
+                <tr>
+                    <th colspan="3" class="text-center">Order Details</th>
+                </tr>
+            </thead>
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col" class="px-3">Product</th>
+                    <th scope="col" class="px-3">Quantity</th>
+                    <th scope="col" class="px-3">Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each orderItems}}
+                <tr>
+                    <td class="px-3">{{this.description}}</td>
+                    <td class="px-3">{{this.quantity}}</td>
+                    <td class="px-3">${{calcPrice this.amount_total}}</td>
+                </tr>
+                {{/each}}
+                <tr>
+                    <td colspan="2" class="text-end">Shipping:</td>
+                    <td class="px-3">${{calcPrice session.shipping_options.0.shipping_amount}}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="fw-bold text-end">Total:</td>
+                    <td class="fw-bold px-3">${{calcPrice session.amount_total}}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
