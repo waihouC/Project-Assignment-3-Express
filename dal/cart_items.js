@@ -42,7 +42,7 @@ const removeCartItem = async (userId, productId, priceId) => {
     }
     
     return false;
-}
+};
 
 const updateQuantity = async (userId, productId, priceId, quantity) => {
     let cartItem = await getCartItemByUserAndProductAndPrice(userId, productId, priceId);
@@ -54,7 +54,7 @@ const updateQuantity = async (userId, productId, priceId, quantity) => {
     }
 
     return null;
-}
+};
 
 module.exports = {
     getCartItems,
