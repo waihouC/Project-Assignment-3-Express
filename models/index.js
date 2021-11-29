@@ -12,14 +12,14 @@ const UserType = bookshelf.model('UserType', {
     users() {
         return this.hasMany('User');
     }
-})
+});
 
 const Category = bookshelf.model('Category',{
     tableName: 'categories',
     products() {
         return this.hasMany('Product');
     }
-})
+});
 
 const Product = bookshelf.model('Product', {
     tableName: 'products',
@@ -46,7 +46,7 @@ const Tag = bookshelf.model('Tag', {
     products() {
         return this.belongsToMany('Product');
     }
-})
+});
 
 const CartItem = bookshelf.model('CartItem', {
     tableName: 'cart_items',
@@ -59,7 +59,40 @@ const CartItem = bookshelf.model('CartItem', {
     user() {
         return this.belongsTo('User');
     }
-})
+});
+
+const OrderStatus = bookshelf.model('OrderStatus', {
+    tableName: 'order_status',
+    orders() {
+        return this.hasMany('Order');
+    }
+});
+
+const Order = bookshelf.model('Order', {
+    tableName: 'orders',
+    user() {
+        return this.belongsTo('User');
+    },
+    orderstatus() {
+        return this.belongsTo('OrderStatus');
+    },
+    orderitems() {
+        return this.hasMany('OrderItem');
+    }
+});
+
+const OrderItem = bookshelf.model('OrderItem', {
+    tableName: 'order_items',
+    order() {
+        return this.belongsTo('Order');
+    },
+    product() {
+        return this.belongsTo('Product');
+    },
+    price() {
+        return this.belongsTo('Price');
+    }
+});
 
 module.exports = { 
     User,
@@ -68,5 +101,8 @@ module.exports = {
     Product,
     Price,
     Tag,
-    CartItem
+    CartItem,
+    OrderStatus,
+    Order,
+    OrderItem
 };

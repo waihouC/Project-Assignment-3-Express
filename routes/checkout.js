@@ -3,11 +3,7 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const CartServices = require('../services/cart_services');
 const StripeServices = require('../services/stripe_services');
-
-// import DAL
-const {
-    createNewOrder
-} = require('../dal/orders');
+const OrderServices = require('../services/order_services');
 
 // import middleware
 const { checkIfAuthenticated } = require('../middlewares');
@@ -148,7 +144,8 @@ router.post('/process_payment', bodyParser.raw({type: 'application/json'}), asyn
         let stripeSession = event.data.object;
 
         // create new order
-        let created = await createNewOrder(stripeSession);
+        const orderService = new OrderServices();
+        let created = await orderService.createNewOrder(stripeSession);
 
         // remove items from cart
         if (created) {

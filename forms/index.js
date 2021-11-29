@@ -231,10 +231,77 @@ const createProductForm = (categories, tags) => {
     });
 }
 
+const createAccountForm = (userType) => {
+    return forms.create({
+        'first_name': fields.string({
+            label: 'First Name',
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3']
+            },
+            validators: [validators.maxlength(50)]
+        }),
+        'last_name': fields.string({
+            label: 'Last Name',
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3']
+            },
+            validators: [validators.maxlength(50)]
+        }),
+        'email': fields.string({
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3']
+            },
+            validators: [validators.email()]
+        }),
+        'contact': fields.tel({
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3']
+            },
+            validators: [validators.digits(), validators.minlength(8), validators.maxlength(8)]
+        }),
+        'user_type_id': fields.string({
+            label: 'User Type',
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3']
+            },
+            widget: widgets.select(),
+            choices: userType
+        }),
+        'password': fields.password({
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3']
+            },
+            validators: [validators.minlength(8)]
+        }),
+        'confirm_password': fields.password({
+            label: 'Confirm Password',
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3 py-0']
+            },
+            validators: [validators.matchField('password')]
+        })
+    });
+}
+
 module.exports = { 
     createRegistrationForm,
     createLoginForm,
     createEditProfileForm,
     createProductForm,
+    createAccountForm,
     bootstrapField 
 };
