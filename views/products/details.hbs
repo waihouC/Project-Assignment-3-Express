@@ -5,12 +5,12 @@
 <div class="row mt-3">
     <div class="col d-flex gap-3 mx-4">
         <a class="btn btn-primary me-auto" href="/products/all-products">Back to Menu</a>
-        {{#IsAdmin user}}
+        {{#IsManager user}}
         <a class="btn btn-primary" href="/products/{{product.id}}/update">Edit Product</a>
         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
             Delete Product
         </button>
-        {{/IsAdmin}}
+        {{/IsManager}}
     </div>
 </div>
 

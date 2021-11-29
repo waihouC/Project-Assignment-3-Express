@@ -12,20 +12,11 @@ const {
     bootstrapField
 } = require('../forms');
 
+// import DAL
+const { getUserByEmail } = require('../dal/users');
+
 // import middleware
 const { checkIfAuthenticated } = require('../middlewares');
-
-// data service
-async function getUserByEmail(email) {
-    let user = await User.where({
-        'email': email
-    }).fetch({
-        require: false
-    });
-
-    return user;
-}
-
 
 // user registration
 router.get('/register', (req, res) => {
@@ -40,7 +31,7 @@ router.get('/register', (req, res) => {
 router.post('/register', async (req, res) => {
     const registerForm = createRegistrationForm();
     registerForm.handle(req, {
-        success: async (form) => {
+        'success': async (form) => {
             // check for account with existing email
             let existingUser = await getUserByEmail(form.data.email);
             if (existingUser) {

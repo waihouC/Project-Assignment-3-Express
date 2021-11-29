@@ -5,8 +5,8 @@ const getCartItems = async (userId) => {
         .where({
             'user_id' : userId
         }).fetch({
-            require: false,
-            withRelated: ['user', 'product', 'price']
+            'require': false,
+            'withRelated': ['user', 'product', 'price']
         });
 };
 
@@ -16,8 +16,8 @@ const getCartItemByUserAndProductAndPrice = async (userId, productId, priceId) =
         'product_id' : productId,
         'price_id': priceId
     }).fetch({
-        require: false,
-        withRelated: ['user', 'product', 'price']
+        'require': false,
+        'withRelated': ['user', 'product', 'price']
     });
 };
 

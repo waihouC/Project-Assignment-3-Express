@@ -1,0 +1,55 @@
+{{#extends 'base'}}
+
+{{#block 'content'}}
+
+<div class="row mb-4 position-relative">
+    <h1 class="display-4">Admin Page</h1>
+    <div class="col-12 py-1 bg-dark position-absolute bottom-0 divider"></div>
+</div>
+
+<div class="row pt-2">
+    <div class="col-12 col-md-6 col-xl-3">
+        <div class="bg-white p-1">
+            <ul class="nav nav-pills nav-fill justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/orders">Orders</a>
+                </li>
+                {{#IsAdmin user}}
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/admin/accounts">Accounts</a>
+                </li>
+                {{/IsAdmin}}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row pt-4">
+    <div class="col-10 col-xl-4 mx-auto d-flex flex-column bg-white p-3">
+        <form method="POST">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
+            {{{form}}}
+            <div class="d-flex justify-content-center">
+                <input type="submit" value="Create account" class="btn btn-primary m-3"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{/block}}
+
+{{#block 'js'}}
+<script src="https://unpkg.com/bootstrap-show-password@1.2.1/dist/bootstrap-show-password.min.js"></script>
+
+<script>
+    $("input[type='password']").attr("data-toggle", "password");
+
+    $(document).ready(function() {
+        $(".invalid-feedback").clone().appendTo(".input-group");
+    });
+    
+</script>
+
+{{/block}}
+
+{{/extends}}

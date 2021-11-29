@@ -9,6 +9,9 @@ const FileStore = require('session-file-store')(session);
 const csrf = require('csurf');
 const cors = require('cors');
 
+// import moment js
+let moment = require("moment");
+
 // create an instance of express app
 let app = express();
 
@@ -47,6 +50,19 @@ hbs.handlebars.registerHelper('retSize', function(size) {
     if (size === 'R') return "Regular";
     if (size === 'L') return "Large";
 })
+
+hbs.handlebars.registerHelper('formatDate', function(date) {
+    return moment(date).format('DD-MM-YYYY');
+})
+
+hbs.handlebars.registerHelper('option', function(value, label, selectedValue) {
+    var selectedProperty = value == selectedValue ? 'selected="selected"' : '';
+    return new hbs.handlebars.SafeString('<option value="' + value + '"' +  selectedProperty + '>' + label + "</option>");
+});
+
+hbs.handlebars.registerHelper('retIndex', function(index) {
+    return index + 1;
+});
 
 // enable forms
 app.use(
@@ -108,6 +124,7 @@ const productRoutes = require('./routes/products');
 const cloudinaryRoutes = require('./routes/cloudinary.js');
 const cartRoutes = require('./routes/cart');
 const checkoutRoutes = require('./routes/checkout');
+const adminRoutes = require('./routes/admin');
 
 async function main() {
     app.use('/', landingRoutes);
@@ -116,6 +133,7 @@ async function main() {
     app.use('/cloudinary', cloudinaryRoutes);
     app.use('/cart', cartRoutes);
     app.use('/checkout', checkoutRoutes);
+    app.use('/admin', adminRoutes);
 }
 
 main();

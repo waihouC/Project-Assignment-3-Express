@@ -19,7 +19,7 @@ const {
 } = require('../dal/products');
 
 // import middleware
-const { checkIfAuthenticatedAsAdmin } = require('../middlewares');
+const { checkIfAuthenticatedAsAdminOrMgr } = require('../middlewares');
 
 
 // show all products with regular size info
@@ -248,7 +248,7 @@ router.post('/:product_id/details', async (req, res) => {
 });
 
 // create new product
-router.get('/create', checkIfAuthenticatedAsAdmin, async (req, res) => {
+router.get('/create', checkIfAuthenticatedAsAdminOrMgr, async (req, res) => {
     const allCategories = await getAllCategories();
     const allTags = await getAllTags();
 
@@ -319,7 +319,7 @@ router.post('/create', async (req, res) => {
 });
 
 // update product
-router.get('/:product_id/update', checkIfAuthenticatedAsAdmin, async (req, res) => {
+router.get('/:product_id/update', checkIfAuthenticatedAsAdminOrMgr, async (req, res) => {
     const allCategories = await getAllCategories();
     const allTags = await getAllTags();
     
