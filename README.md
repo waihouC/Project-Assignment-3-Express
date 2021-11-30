@@ -21,4 +21,3 @@ The website provides features such as:
 A live website can be accessed here:
 
 https://project-assignment-3-express.herokuapp.com/
-
