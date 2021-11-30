@@ -119,7 +119,8 @@ router.get('/success', async (req, res) => {
 });
 
 router.get('/cancelled', (req, res) => {
-    res.render('checkout/cancelled');
+    //res.render('checkout/cancelled');
+    res.redirect("/cart");
 });
 
 router.post('/process_payment', bodyParser.raw({type: 'application/json'}), async (req, res) => {
@@ -140,9 +141,8 @@ router.post('/process_payment', bodyParser.raw({type: 'application/json'}), asyn
     }
 
     // payment successful
+    let stripeSession = event.data.object;
     if (event.type == 'checkout.session.completed') {
-        let stripeSession = event.data.object;
-
         // create new order
         const orderService = new OrderServices();
         let created = await orderService.createNewOrder(stripeSession);

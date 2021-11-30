@@ -297,11 +297,44 @@ const createAccountForm = (userType) => {
     });
 }
 
+const createSearchForm = (orderStatus) => {
+    return forms.create({
+        'search_term': fields.string({
+            label: 'Search for...',
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3']
+            },
+        }),
+        'order_status': fields.string({
+            label: 'Order Status',
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3']
+            },
+            widget: widgets.select(),
+            choices: orderStatus
+        }),
+        'delivery_date': fields.date({
+            label: 'Delivery Date',
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['col-form-label fw-bold col-3']
+            },
+            widget: widgets.date()
+        })
+    });
+}
+
 module.exports = { 
     createRegistrationForm,
     createLoginForm,
     createEditProfileForm,
     createProductForm,
     createAccountForm,
+    createSearchForm,
     bootstrapField 
 };

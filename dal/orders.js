@@ -23,7 +23,7 @@ const getAllOrders = async () => {
     return await Order.collection()
     .orderBy('delivery_date', 'asc')
     .fetch({
-        'require': true,
+        'require': false,
         'withRelated': [
             'user', 
             'orderstatus', 
@@ -38,7 +38,7 @@ const getOrderById = async (id) => {
     return await Order.where({
         'id': id
     }).fetch({
-        'require': true,
+        'require': false,
         'withRelated': [
             'user', 
             'orderstatus', 
