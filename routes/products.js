@@ -2,6 +2,7 @@ const express = require("express");
 const { createProductForm, bootstrapField } = require("../forms");
 const { createSearchForm, searchBootstrapField } = require("../forms/search");
 const router = express.Router();
+const ProductServices = require("../services/product_services");
 
 // import in the models
 const {
@@ -11,8 +12,6 @@ const {
 
 // import in the DAL
 const {
-    getProductsByCategoryAndSize,
-    getProductById,
     getAllCategories,
     getAllTags,
     getPriceByProductandSize
@@ -26,7 +25,8 @@ const { checkIfAuthenticatedAsAdminOrMgr } = require('../middlewares');
 router.get('/all-products', async (req, res) => {
     const searchForm = createSearchForm();
     
-    const products = await getProductsByCategoryAndSize(null, null, 'R');
+    const productService = new ProductServices();
+    const products = await productService.searchProducts(null, null, 'R');
 
     res.render('products/index', {
         'page': "All Products",
@@ -38,10 +38,11 @@ router.get('/all-products', async (req, res) => {
 // search all products
 router.post('/all-products', async (req, res) => {
     const searchForm = createSearchForm();
+    const productService = new ProductServices();
     
     searchForm.handle(req, {
         'success': async (form) => {
-            let products = await getProductsByCategoryAndSize(form.data.search_query, null, 'R');
+            let products = await productService.searchProducts(form.data.search_query, null, 'R');
 
             res.render('products/index', {
                 'isSearch': true,
@@ -51,7 +52,7 @@ router.post('/all-products', async (req, res) => {
             });
         },
         'error': async (form) => {
-            let products = await getProductsByCategoryAndSize(null, null, 'R');
+            let products = await productService.searchProducts(null, null, 'R');
 
             res.render('products/index', {
                 'isSearch': false,
@@ -61,7 +62,7 @@ router.post('/all-products', async (req, res) => {
             });
         },
         'empty': async (form) => {
-            let products = await getProductsByCategoryAndSize(null, null, 'R');
+            let products = await productService.searchProducts(null, null, 'R');
 
             res.render('products/index', {
                 'isSearch': false,
@@ -77,7 +78,8 @@ router.post('/all-products', async (req, res) => {
 router.get('/standard', async (req, res) => {
     const searchForm = createSearchForm();
     
-    const products = await getProductsByCategoryAndSize(null, 1, 'R');
+    const productService = new ProductServices();
+    const products = await productService.searchProducts(null, 1, 'R');
 
     res.render('products/index', {
         'page': "Standard",
@@ -89,10 +91,11 @@ router.get('/standard', async (req, res) => {
 // search standard products
 router.post('/standard', async (req, res) => {
     const searchForm = createSearchForm();
+    const productService = new ProductServices();
     
     searchForm.handle(req, {
         'success': async (form) => {
-            let products = await getProductsByCategoryAndSize(form.data.search_query, 1, 'R');
+            let products = await productService.searchProducts(form.data.search_query, 1, 'R');
 
             res.render('products/index', {
                 'isSearch': true,
@@ -102,7 +105,7 @@ router.post('/standard', async (req, res) => {
             });
         },
         'error': async (form) => {
-            let products = await getProductsByCategoryAndSize(null, 1, 'R');
+            let products = await productService.searchProducts(null, 1, 'R');
 
             res.render('products/index', {
                 'isSearch': false,
@@ -112,7 +115,7 @@ router.post('/standard', async (req, res) => {
             });
         },
         'empty': async (form) => {
-            let products = await getProductsByCategoryAndSize(null, 1, 'R');
+            let products = await productService.searchProducts(null, 1, 'R');
 
             res.render('products/index', {
                 'isSearch': false,
@@ -128,7 +131,8 @@ router.post('/standard', async (req, res) => {
 router.get('/premium', async (req, res) => {
     const searchForm = createSearchForm();
     
-    const products = await getProductsByCategoryAndSize(null, 2, 'R');
+    const productService = new ProductServices();
+    const products = await productService.searchProducts(null, 2, 'R');
 
     res.render('products/index', {
         'page': "Premium",
@@ -140,10 +144,11 @@ router.get('/premium', async (req, res) => {
 // search premium products
 router.post('/premium', async (req, res) => {
     const searchForm = createSearchForm();
+    const productService = new ProductServices();
     
     searchForm.handle(req, {
         'success': async (form) => {
-            let products = await getProductsByCategoryAndSize(form.data.search_query, 2, 'R');
+            let products = await productService.searchProducts(form.data.search_query, 2, 'R');
 
             res.render('products/index', {
                 'isSearch': true,
@@ -153,7 +158,7 @@ router.post('/premium', async (req, res) => {
             });
         },
         'error': async (form) => {
-            let products = await getProductsByCategoryAndSize(null, 2, 'R');
+            let products = await productService.searchProducts(null, 2, 'R');
 
             res.render('products/index', {
                 'isSearch': false,
@@ -163,7 +168,7 @@ router.post('/premium', async (req, res) => {
             });
         },
         'empty': async (form) => {
-            let products = await getProductsByCategoryAndSize(null, 2, 'R');
+            let products = await productService.searchProducts(null, 2, 'R');
 
             res.render('products/index', {
                 'isSearch': false,
@@ -179,7 +184,8 @@ router.post('/premium', async (req, res) => {
 router.get('/healthy', async (req, res) => {
     const searchForm = createSearchForm();
     
-    const products = await getProductsByCategoryAndSize(null, 3, 'R');
+    const productService = new ProductServices();
+    const products = await productService.searchProducts(null, 3, 'R');
 
     res.render('products/index', {
         'page': "Healthy",
@@ -191,10 +197,11 @@ router.get('/healthy', async (req, res) => {
 // search healthy products
 router.post('/healthy', async (req, res) => {
     const searchForm = createSearchForm();
+    const productService = new ProductServices();
     
     searchForm.handle(req, {
         'success': async (form) => {
-            let products = await getProductsByCategoryAndSize(form.data.search_query, 3, 'R');
+            let products = await productService.searchProducts(form.data.search_query, 3, 'R');
 
             res.render('products/index', {
                 'isSearch': true,
@@ -204,7 +211,7 @@ router.post('/healthy', async (req, res) => {
             });
         },
         'error': async (form) => {
-            let products = await getProductsByCategoryAndSize(null, 3, 'R');
+            let products = await productService.searchProducts(null, 3, 'R');
 
             res.render('products/index', {
                 'isSearch': false,
@@ -214,7 +221,7 @@ router.post('/healthy', async (req, res) => {
             });
         },
         'empty': async (form) => {
-            let products = await getProductsByCategoryAndSize(null, 3, 'R');
+            let products = await productService.searchProducts(null, 3, 'R');
 
             res.render('products/index', {
                 'isSearch': false,
@@ -228,7 +235,8 @@ router.post('/healthy', async (req, res) => {
 
 // product details page
 router.get('/:product_id/details', async (req, res) => {
-    let product = await getProductById(req.params.product_id);
+    const productService = new ProductServices();
+    let product = await productService.getProductById(req.params.product_id);
 
     res.render('products/details', {
         'product': product.toJSON()
@@ -237,11 +245,11 @@ router.get('/:product_id/details', async (req, res) => {
 
 // delete product
 router.post('/:product_id/details', async (req, res) => {
-    let product = await getProductById(req.params.product_id);
-
+    const productService = new ProductServices();
+    let product = await productService.getProductById(req.params.product_id);
     // store name before destroying
     var name = product.get('name');
-    await product.destroy();
+    await productService.deleteProduct(product);
 
     req.flash("success_messages", name + " product deleted successfully.");
     res.redirect('/products/all-products');
@@ -323,7 +331,8 @@ router.get('/:product_id/update', checkIfAuthenticatedAsAdminOrMgr, async (req, 
     const allCategories = await getAllCategories();
     const allTags = await getAllTags();
     
-    let product = await getProductById(req.params.product_id);
+    const productService = new ProductServices();
+    let product = await productService.getProductById(req.params.product_id);
 
     let productForm = createProductForm(allCategories, allTags);
     productForm.fields.name.value = product.get('name');
@@ -368,7 +377,8 @@ router.post('/:product_id/update', async (req, res) => {
     const allCategories = await getAllCategories();
     const allTags = await getAllTags();
     
-    let product = await getProductById(req.params.product_id);
+    const productService = new ProductServices();
+    let product = await productService.getProductById(req.params.product_id);
 
     const productForm = createProductForm(allCategories, allTags);
 

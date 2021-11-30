@@ -8,7 +8,7 @@
 </div>
 
 <div class="row pt-2">
-    <div class="col-12 col-md-6 col-xl-3">
+    <div class="col-12 col-md-6 col-xl-3 p-0">
         <div class="bg-white p-1">
             <ul class="nav nav-pills nav-fill justify-content-center">
                 <li class="nav-item">
@@ -20,6 +20,29 @@
                 </li>
                 {{/IsAdmin}}
             </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row pt-4">
+    <div class="col-12 col-lg-7 mx-auto p-0">
+        <div class="accordion" id="orderSearch">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headerSearch">
+                    <button class="accordion-button collapsed bg-secondary shadow-none fw-bold text-white" type="button" data-bs-toggle="collapse" data-bs-target="#bodySearch" aria-expanded="false" aria-controls="bodySearch">
+                        Search Order
+                    </button>
+                </h2>
+                <div id="bodySearch" class="accordion-collapse collapse" aria-labelledby="headerSearch" data-bs-parent="#orderSearch">
+                    <div class="accordion-body">
+                        <form method="POST">
+                            <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
+                            {{{form}}}
+                            <input type="submit" value="Search" class="btn btn-primary m-3"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -51,7 +74,7 @@
                                             <input type="submit" value="Update" class="btn btn-primary btn-sm"/>
                                         </div>
                                         <div class="col-auto">
-                                            <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                                            <a href="/admin/orders/{{this.id}}/delete" class="btn btn-danger btn-sm">Delete</a>
                                         </div>
                                     </div>
                                     <div class="row">

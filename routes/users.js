@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const crypto = require('crypto');
 
 // import in the User model
 const { User } = require('../models');
@@ -18,6 +19,13 @@ const { getUserByEmail } = require('../dal/users');
 // import middleware
 const { checkIfAuthenticated } = require('../middlewares');
 
+// encrypt password
+const getHashedPassword = (password) => {
+    const sha256 = crypto.createHash('sha256');
+    const hash = sha256.update(password).digest('base64');
+    return hash;
+}
+
 // user registration
 router.get('/register', (req, res) => {
     // display the registration form
@@ -35,7 +43,6 @@ router.post('/register', async (req, res) => {
             // check for account with existing email
             let existingUser = await getUserByEmail(form.data.email);
             if (existingUser) {
-                console.log("User exists.");
                 req.flash("error_messages", "Account is an existing user.");
                 res.redirect('/users/register');
             } else {
@@ -44,7 +51,7 @@ router.post('/register', async (req, res) => {
                     'last_name': form.data.last_name,
                     'email': form.data.email,
                     'contact': form.data.contact,
-                    'password': form.data.password,
+                    'password': getHashedPassword(form.data.password),
                     'created_on': new Date(),
                     'user_type_id': 3 // 'user' type
                 });
@@ -82,7 +89,7 @@ router.post('/login', async (req, res) => {
                 res.redirect('/users/login');
             } else {
                 // check if the password matches
-                if (user.get('password') === form.data.password) {
+                if (user.get('password') === getHashedPassword(form.data.password)) {
                     // if matches, store user in client session
                     req.session.user = {
                         id: user.get('id'),
@@ -145,12 +152,12 @@ router.post('/edit', async (req, res) => {
             
             // validate new password is not same as old password
             if (form.data.new_password) {
-                if (userProfile.get('password') === form.data.new_password) {
+                if (userProfile.get('password') === getHashedPassword(form.data.new_password)) {
                     req.flash("error_messages", "New password cannot be the same as old password.");
                     res.redirect('/users/edit');
                     return;
                 } else {
-                    userProfile.set('password', form.data.new_password);
+                    userProfile.set('password', getHashedPassword(form.data.new_password));
                 }
             }
             
@@ -163,6 +170,7 @@ router.post('/edit', async (req, res) => {
 
             // update user session
             req.session.user = {
+                id: req.session.user.id,
                 first_name: userProfile.get('first_name'),
                 last_name: userProfile.get('last_name'),
                 email: userProfile.get('email'),
