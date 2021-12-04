@@ -191,7 +191,7 @@ db-migrate framework is used to creating tables in the database.
 
 ## Test Cases
 
-Test cases can be found here.
+Test cases can be found [here](public/doc/Assignment-3-test-cases.docx).
 
 ## Deployment
 
