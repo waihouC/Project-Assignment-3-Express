@@ -189,9 +189,9 @@ db-migrate framework is used to creating tables in the database.
 
 **Github repository:** https://github.com/waihouC/Project-Assignment-3-Express
 
-## Test Cases
+## Testing
 
-Test cases can be found [here](public/doc/Assignment-3-test-cases.docx).
+Test cases can be found [here](public/doc/Assignment-3-test-cases.pdf).
 
 ## Deployment
 
