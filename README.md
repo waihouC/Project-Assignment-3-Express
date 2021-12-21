@@ -1,4 +1,4 @@
-# World of Flavours - An ice cream website
+# World of Flavours - An ice cream shopping website
 ## Summary
 
 ### Purpose
